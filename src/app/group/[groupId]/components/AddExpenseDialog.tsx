@@ -78,7 +78,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
             if (splitType === "equal") {
                 // Split equally among all members
                 const splitAmount = totalAmount / members.length
-                splits = members.map(member => ({
+                splits = members.map((member: Member) => ({
                     memberId: member.id,
                     amount: Math.round(splitAmount * 100) / 100, // Round to 2 decimals
                 }))
@@ -91,7 +91,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                 }
             } else if (splitType === "custom") {
                 // Custom splits
-                splits = members.map(member => {
+                splits = members.map((member: Member) => {
                     const splitAmount = parseFloat(customSplits[member.id] || "0")
                     return {
                         memberId: member.id,
@@ -117,7 +117,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                     return
                 }
 
-                splits = members.map(member => {
+                splits = members.map((member: Member) => {
                     const percentage = parseFloat(percentages[member.id] || "0")
                     const amount = Math.round((totalAmount * percentage / 100) * 100) / 100
                     return {
@@ -130,7 +130,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                 const splitsSum = splits.reduce((sum, s) => sum + s.amount, 0)
                 const difference = totalAmount - splitsSum
                 if (Math.abs(difference) > 0.01) {
-                    const lastNonZeroIndex = splits.map((s, i) => s.amount > 0 ? i : -1).filter(i => i >= 0).pop()
+                    const lastNonZeroIndex = splits.map((s: { amount: number; memberId: string }, i: number) => s.amount > 0 ? i : -1).filter((i: number) => i >= 0).pop()
                     if (lastNonZeroIndex !== undefined) {
                         splits[lastNonZeroIndex].amount += difference
                     }
@@ -147,7 +147,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                 }
 
                 const amountPerShare = totalAmount / totalShares
-                splits = members.map(member => {
+                splits = members.map((member: Member) => {
                     const memberShares = parseFloat(shares[member.id] || "0")
                     const amount = Math.round((amountPerShare * memberShares) * 100) / 100
                     return {
@@ -160,7 +160,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                 const splitsSum = splits.reduce((sum, s) => sum + s.amount, 0)
                 const difference = totalAmount - splitsSum
                 if (Math.abs(difference) > 0.01) {
-                    const lastNonZeroIndex = splits.map((s, i) => s.amount > 0 ? i : -1).filter(i => i >= 0).pop()
+                    const lastNonZeroIndex = splits.map((s: { amount: number; memberId: string }, i: number) => s.amount > 0 ? i : -1).filter((i: number) => i >= 0).pop()
                     if (lastNonZeroIndex !== undefined) {
                         splits[lastNonZeroIndex].amount += difference
                     }
@@ -277,7 +277,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                                     <SelectValue placeholder="Select who paid" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {members.map((member) => (
+                                    {members.map((member: Member) => (
                                         <SelectItem key={member.id} value={member.id}>
                                             {member.user.name || member.user.email}
                                         </SelectItem>
@@ -446,7 +446,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                                 {amount && (
                                     <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
                                         <div className="font-medium mb-1">Preview:</div>
-                                        {members.map((member) => {
+                                        {members.map((member: Member) => {
                                             const percentage = parseFloat(percentages[member.id] || "0")
                                             const memberAmount = (parseFloat(amount) * percentage / 100).toFixed(2)
                                             return percentage > 0 ? (
@@ -497,7 +497,7 @@ export function AddExpenseDialog({ groupId, members }: AddExpenseDialogProps) {
                                         {(() => {
                                             const totalShares = Object.values(shares).reduce((sum, val) => sum + (parseFloat(val) || 0), 0)
                                             const amountPerShare = totalShares > 0 ? parseFloat(amount) / totalShares : 0
-                                            return members.map((member) => {
+                                            return members.map((member: Member) => {
                                                 const memberShares = parseFloat(shares[member.id] || "0")
                                                 const memberAmount = (amountPerShare * memberShares).toFixed(2)
                                                 return memberShares > 0 ? (

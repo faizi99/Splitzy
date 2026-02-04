@@ -74,7 +74,7 @@ export function ExpensesList({ expenses, groupId }: ExpensesListProps) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-3">
-                    {expenses.map((expense) => (
+                    {expenses.map((expense: typeof expenses[number]) => (
                         <ExpenseCard
                             key={expense.id}
                             expense={expense}

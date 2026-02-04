@@ -148,7 +148,7 @@ export async function createExpense(
     splits: SplitInput[]
 ) {
     // Validate that splits sum to total amount
-    const splitsSum = splits.reduce((sum, split) => sum + split.amount, 0)
+    const splitsSum = splits.reduce((sum: number, split: SplitInput) => sum + split.amount, 0)
     if (Math.abs(splitsSum - amount) > 0.01) { // Allow for floating point errors
         throw new Error(`Splits must sum to total amount. Got ${splitsSum}, expected ${amount}`)
     }
@@ -174,7 +174,7 @@ export async function createExpense(
             groupId,
             payerId,
             splits: {
-                create: splits.map(split => ({
+                create: splits.map((split: SplitInput) => ({
                     amount: split.amount,
                     memberId: split.memberId,
                 })),
@@ -235,7 +235,7 @@ export async function updateExpense(
         const newAmount = data.amount ?? expense.amount
         const newSplits = data.splits ?? expense.splits
 
-        const splitsSum = newSplits.reduce((sum: number, split: any) => {
+        const splitsSum = newSplits.reduce((sum: number, split: SplitInput | { amount: number }) => {
             return sum + (split.amount || 0)
         }, 0)
 
@@ -258,7 +258,7 @@ export async function updateExpense(
                 date: data.date,
                 payerId: data.payerId,
                 splits: {
-                    create: data.splits.map(split => ({
+                    create: data.splits.map((split: SplitInput) => ({
                         amount: split.amount,
                         memberId: split.memberId,
                     })),

@@ -78,7 +78,7 @@ export default async function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {groups.map((group) => (
+              {groups.map((group: typeof groups[number]) => (
                 <GroupCard key={group.id} group={group} />
               ))}
             </CardContent>

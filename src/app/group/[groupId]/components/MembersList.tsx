@@ -68,7 +68,7 @@ export function MembersList({ members, groupId }: MembersListProps) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-2">
-                    {members.map((member) => (
+                    {members.map((member: typeof members[number]) => (
                         <div
                             key={member.id}
                             className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"

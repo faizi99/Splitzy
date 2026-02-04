@@ -108,7 +108,7 @@ export function ExpenseCard({ expense, groupId }: ExpenseCardProps) {
 
                         {showSplits && (
                             <div className="mt-3 pt-3 border-t space-y-2">
-                                {expense.splits.map((split) => (
+                                {expense.splits.map((split: typeof expense.splits[number]) => (
                                     <div
                                         key={split.id}
                                         className="flex justify-between items-center text-sm"

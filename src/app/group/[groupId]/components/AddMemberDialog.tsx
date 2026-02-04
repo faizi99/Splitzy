@@ -103,7 +103,7 @@ export function AddMemberDialog({ groupId }: AddMemberDialogProps) {
                                         <SelectValue placeholder="Select a user" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {users.map((user) => (
+                                        {users.map((user: typeof users[number]) => (
                                             <SelectItem key={user.id} value={user.id}>
                                                 {user.name || user.email}
                                             </SelectItem>

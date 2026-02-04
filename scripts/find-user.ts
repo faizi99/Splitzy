@@ -32,12 +32,12 @@ async function findUsers(searchName: string) {
         },
       });
 
-      allUsers.forEach((user, index) => {
+      allUsers.forEach((user: typeof allUsers[number], index: number) => {
         console.log(`${index + 1}. ${user.name} - ${user.email}`);
       });
     } else {
       console.log(`Found ${users.length} user(s) matching "${searchName}":\n`);
-      users.forEach((user, index) => {
+      users.forEach((user: typeof users[number], index: number) => {
         console.log(`${index + 1}. Name: ${user.name}`);
         console.log(`   Email: ${user.email}`);
         console.log(`   ID: ${user.id}`);

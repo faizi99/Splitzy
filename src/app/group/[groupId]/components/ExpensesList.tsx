@@ -29,12 +29,21 @@ type Expense = {
     }>
 }
 
+type Member = {
+    id: string
+    user: {
+        name: string | null
+        email: string
+    }
+}
+
 type ExpensesListProps = {
     expenses: Expense[]
     groupId: string
+    members: Member[]
 }
 
-export function ExpensesList({ expenses, groupId }: ExpensesListProps) {
+export function ExpensesList({ expenses, groupId, members }: ExpensesListProps) {
     if (expenses.length === 0) {
         return (
             <Card>
@@ -68,7 +77,7 @@ export function ExpensesList({ expenses, groupId }: ExpensesListProps) {
                     </CardTitle>
                     <div className="text-right">
                         <p className="text-sm text-muted-foreground">Total</p>
-                        <p className="text-xl font-bold">${totalAmount.toFixed(2)}</p>
+                        <p className="text-xl font-bold">₨{totalAmount.toFixed(2)}</p>
                     </div>
                 </div>
             </CardHeader>
@@ -79,6 +88,7 @@ export function ExpensesList({ expenses, groupId }: ExpensesListProps) {
                             key={expense.id}
                             expense={expense}
                             groupId={groupId}
+                            members={members}
                         />
                     ))}
                 </div>

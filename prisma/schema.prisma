@@ -62,11 +62,12 @@ model VerificationToken {
 }
 
 model Group {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  members   Member[]
-  expenses  Expense[]
+  id          String       @id @default(cuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  members     Member[]
+  expenses    Expense[]
+  settlements Settlement[]
 }
 
 model Member {
@@ -75,9 +76,11 @@ model Member {
   userId    String
   group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expensesPaid Expense[] // Expenses paid by this member
-  splits    Split[]    // Portions of expenses this member owes
-  joinedAt  DateTime @default(now())
+  expensesPaid    Expense[]    // Expenses paid by this member
+  splits          Split[]      // Portions of expenses this member owes
+  settlementsFrom Settlement[] @relation("SettlementFrom")
+  settlementsTo   Settlement[] @relation("SettlementTo")
+  joinedAt        DateTime     @default(now())
 
   @@unique([groupId, userId]) // A user can only be a member once per group
 }
@@ -100,10 +103,26 @@ model Expense {
 model Split {
   id        String   @id @default(cuid())
   amount    Float
-  
+
   expenseId String
   expense   Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
-  
+
   memberId  String
   member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+
+model Settlement {
+  id        String   @id @default(cuid())
+  amount    Float
+  note      String?
+  settledAt DateTime @default(now())
+
+  groupId   String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  fromId    String
+  from      Member   @relation("SettlementFrom", fields: [fromId], references: [id], onDelete: Cascade)
+
+  toId      String
+  to        Member   @relation("SettlementTo", fields: [toId], references: [id], onDelete: Cascade)
 }

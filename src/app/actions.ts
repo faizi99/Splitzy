@@ -280,3 +280,21 @@ export async function updateExpense(
 
     revalidatePath(`/group/${groupId}`)
 }
+
+export async function recordSettlement(
+    groupId: string,
+    fromId: string,
+    toId: string,
+    amount: number,
+    note?: string
+) {
+    await prisma.settlement.create({
+        data: { groupId, fromId, toId, amount, note },
+    })
+    revalidatePath(`/group/${groupId}`)
+}
+
+export async function deleteSettlement(settlementId: string, groupId: string) {
+    await prisma.settlement.delete({ where: { id: settlementId } })
+    revalidatePath(`/group/${groupId}`)
+}

@@ -5,9 +5,12 @@ import { MembersList } from "./components/MembersList"
 import { AddMemberDialog } from "./components/AddMemberDialog"
 import { AddExpenseDialog } from "./components/AddExpenseDialog"
 import { ExpensesList } from "./components/ExpensesList"
+import { BalancesSummary } from "./components/BalancesSummary"
+import { SettlementPlan } from "./components/SettlementPlan"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
+import { getSettlementPlan } from "@/lib/calculations"
 
 export default async function GroupPage({
     params,
@@ -29,40 +32,33 @@ export default async function GroupPage({
                         }
                     }
                 },
-                orderBy: {
-                    joinedAt: 'asc'
-                }
+                orderBy: { joinedAt: 'asc' }
             },
             expenses: {
                 include: {
                     payer: {
                         include: {
-                            user: {
-                                select: {
-                                    name: true,
-                                    email: true,
-                                }
-                            }
+                            user: { select: { name: true, email: true } }
                         }
                     },
                     splits: {
                         include: {
                             member: {
                                 include: {
-                                    user: {
-                                        select: {
-                                            name: true,
-                                            email: true,
-                                        }
-                                    }
+                                    user: { select: { name: true, email: true } }
                                 }
                             }
                         }
                     }
                 },
-                orderBy: {
-                    date: 'desc'
-                }
+                orderBy: { date: 'desc' }
+            },
+            settlements: {
+                include: {
+                    from: { include: { user: { select: { name: true, email: true } } } },
+                    to: { include: { user: { select: { name: true, email: true } } } },
+                },
+                orderBy: { settledAt: 'desc' }
             }
         },
     })
@@ -70,6 +66,11 @@ export default async function GroupPage({
     if (!group) {
         notFound()
     }
+
+    const hasActivity = group.members.length > 0 && group.expenses.length > 0
+    const { balances, transactions } = hasActivity
+        ? getSettlementPlan(group.members, group.expenses, group.settlements)
+        : { balances: [], transactions: [] }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50">
@@ -107,7 +108,19 @@ export default async function GroupPage({
                             <p>Add members to the group before creating expenses</p>
                         </div>
                     ) : (
-                        <ExpensesList expenses={group.expenses} groupId={groupId} />
+                        <ExpensesList expenses={group.expenses} groupId={groupId} members={group.members} />
+                    )}
+
+                    {hasActivity && (
+                        <>
+                            <h2 className="text-xl font-semibold">Balances & Settlements</h2>
+                            <BalancesSummary balances={balances} />
+                            <SettlementPlan
+                                groupId={groupId}
+                                transactions={transactions}
+                                recordedSettlements={group.settlements}
+                            />
+                        </>
                     )}
                 </div>
             </div>

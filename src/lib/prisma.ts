@@ -4,7 +4,7 @@ import { PrismaLibSql } from '@prisma/adapter-libsql'
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 // Next.js automatically loads .env.local, so we don't need dotenv/config
-const connectionString = process.env.DATABASE_URL || "file:///home/faizan/Desktop/Splitzy/prisma/dev.db"
+const connectionString = process.env.DATABASE_URL || "file:./prisma/dev.db"
 const authToken = process.env.TURSO_AUTH_TOKEN
 
 if (!process.env.DATABASE_URL) {

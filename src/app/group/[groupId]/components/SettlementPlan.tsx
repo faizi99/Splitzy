@@ -73,7 +73,7 @@ export function SettlementPlan({ groupId, transactions, recordedSettlements }: S
                                         </div>
                                         <div className="min-w-0">
                                             <p className="font-semibold text-sm truncate">{tx.from.name}</p>
-                                            <p className="text-xs font-medium text-red-500">owes</p>
+                                            <p className="text-xs font-medium text-red-500">pays</p>
                                         </div>
                                     </div>
 
